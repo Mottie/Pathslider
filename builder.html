@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 9]> <html class="oldie"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>jQuery Pathslider Builder</title>
+
+<!-- jQuery (required for builder) -->
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+<!-- demo only -->
+<link href="http://fonts.googleapis.com/css?family=Paytone+One" rel="stylesheet">
+<link href="demo/demo.css" rel="stylesheet">
+<script src="demo/demo.js"></script>
+<link href="demo/colorpicker/colorpicker.css" rel="stylesheet"> <!-- color picker for styling -->
+<script src="demo/colorpicker/colorpicker.js"></script>
+<script src="http://mottie.github.com/Jatt/js/jquery.jatt.min.js"></script> <!-- tooltip -->
+
+<!-- Pathslider & Pathbuilder files (required) -->
+<link href="css/pathslider.css" rel="stylesheet">
+<script src="js/jquery.pathslider.js"></script>
+<script src="js/jquery.pathslider.builder.js"></script>
+
+<style>
+#slider {
+	margin: 0 auto;
+	width: 300px;
+	height: 300px;
+}
+</style>
+
+</head>
+<body class="builder">
+
+<h1 class="hide">This Builder will not work in browsers that do not support canvas<br><a href="index.html">Back to the demo</a></h1>
+
+<div class="wrapper">
+
+<header>
+	<h1>jQuery Pathslider</h1>
+	<a class="home" title="Home" href="index.html">Home</a>
+	<a class="builder current" title="Builder" href="builder.html">Builder</a>
+</header>
+
+<div class="content">
+
+	<div id="slider"></div>
+
+	<div id="tabs">
+		<ul>
+			<li><a href="#options">Options</a></li>
+			<li><a href="#style">Style</a></li>
+			<li><a href="#builder">Builder</a></li>
+			<li><a href="#code">Code</a></li>
+			<li><a href="#readme">Read Me</a></li>
+		</ul>
+
+		<div id="options" class="tab">
+			<div class="events">
+				<h4>Events:</h4>
+				<ul class="message"></ul>
+			</div>
+			<p>
+			Presets:
+				<span class="presets"></span><br>
+			Points
+				<a class="info tooltip" title="See the &quot;Read Me&quot; tab for more info" href="#">[?]</a>:
+				<input class="points" type="text"> <button class="setpoints">Set</button>
+			</p>
+			<p>
+			Grip:
+			<blockquote>
+			<p>
+			Position
+				<a class="info tooltip" title="Set the position of the grip, from 0-100%" href="#">[?]</a>:
+				<input class="position" type="text"> <button class="setpos">Set</button><br>
+			Rotation: <input class="set rotate tooltip" type="checkbox" title="Rotate the grip as it moves along the slide"> <span class="angle">0</span> degrees
+			</p>
+			<p>
+			Tolerance
+				<a class="info tooltip" title="Number of points on curve from the last position to check; increase this to scroll faster, but the grip may start getting jumpy." href="#">[?]</a>:
+				<input class="set tolerance" type="range" min="1" max="5" value="3"> <span></span><br>
+			Range
+				<a class="info tooltip" title="Distance, in pixels, from the cursor to a matching x/y on the curve (should be about the same size as the grip). Reduce this to make the grip less jumpy." href="#">[?]</a>:
+				<input class="set range" type="range" min="20" max="50" value="30"> <span></span>
+			</p>
+			</blockquote>
+		</div>
+
+		<div id="style" class="tab">
+			<p>
+			Pathslider Background
+				<a class="info tooltip" title="This css background setting is added to the slider css definitions; see the &quot;code&quot; tab" href="#">[?]</a>:
+				<input class="set bkgd" placeholder="Add background css" type="text" value="#eee url()">
+			</p>
+			<p>
+			Grip Color
+				<a class="info tooltip" title="Set a solid color in the first input. Or set a css class name to add to the grip (select box)" href="#">[?]</a>:
+				<input class="set gripColor" type="text" value="#dddddd" data-last="#dddddd">
+				<select class="set gripStyle">
+					<option>Solid Color</option>
+					<option>Black</option>
+					<option>Chrome 1</option>
+					<option>Chrome 2</option>
+					<option>Silver</option>
+				</select>
+			</p>
+			Curve:
+			<blockquote>
+				<p>
+				Color
+					<a class="info tooltip" target="_blank" title="Canvas line stroke style" href="#">[?]</a>:
+					<input class="set curveColor" type="text" value="#000000" data-last="#000000"><br>
+				Thickness
+					<a class="info tooltip" title="Set the width (in pixels) of the curve." href="#">[?]</a>:
+					<input class="set thickness" type="range" min="1" max="25" value="4"> <span></span><br>
+				Cap <a class="info tooltip" target="_blank" title="Canvas lineCap settings; Click this link for more info" href="https://developer.mozilla.org/samples/canvas-tutorial/4_6_canvas_linecap.html">[?]</a>:
+				<select class="set capStyle">
+					<option>Butt</option>
+					<option selected>Round</option>
+					<option>Square</option>
+				</select>
+				</p>
+			</blockquote>
+		</div>
+
+		<div id="builder" class="tab">
+			<p>
+			Edit mode: <input class="set edit tooltip" title="Enable/disable edit mode" type="checkbox">
+			</p>
+			<p>
+			Grid: <input class="set grid tooltip" type="range" min="1" max="50" title="Grid spacing (range 1-50)" value="25"> <span></span>
+				<input class="set snap tooltip" title="Snap to Grid" type="checkbox"> Snap<br>
+			</p>
+		</div>
+
+		<div id="code" class="tab">
+			<p>
+				 <img src="demo/colorpicker/blank.gif" id="save" alt=" "> Right Click the yellow square to save the current canvas as an image.<br>
+				<textarea class="code" rows="20" readonly></textarea>
+			</p>
+		</div>
+
+		<div id="readme" class="tab">
+			<p>
+				<h4>Controls Points</h4>
+				<ul>
+					<li>The green circle on the curve indicates the start of the curve; it is assigned a value of zero percent.</li>
+					<li>The red circle on the curve indicates the end of the curve; it is assigned a value of 100%.</li>
+					<li>The darker green and red circles are the bezier control points which alter the shape of the curve.</li>
+				</ul>
+				<h4>Movement</h4>
+				<ul>
+					<li>Hold the mouse button down on any of the control points to drag that point around.</li>
+					<li>Use shift-mousedown on any control point to move the entire curve. The shift-mousedown is a bit sluggish (the code needs improving), so it would be better to uncheck the "snap" option in the builder tab.</li>
+				</ul>
+				<h4>Using the PathSlider</h4>
+				<ul>
+					<li>The grip (aka handle) on the curve can be moved at any time by holding the mouse button down on it.</li>
+					<li>Pick from any of the presets to get the feel of how the slider works; or manually change the points.</li>
+					<li>The canvas coordinate system has the origin (0,0) in the upper left corner. X &amp; Y values increase as you move down and right (The Y value behaves opposite of the cartesian coordinate system).</li>
+					<li>Given the following points "<span class="sxy">25,150</span>, <span class="scxy">50,-50</span>, <span class="ecxy">-50,-50</span>, <span class="exy">275,150</span>", they can be represented by the following abbreviations: "<strong><span class="sxy">sx,sy</span>, <span class="scxy">csxo,csyo</span>, <span class="ecxy">cexo,ceyo</span>, <span class="exy">ex,ey</span></strong>"
+						<ul>
+							<li><strong class="sxy">sx, sy</strong>: The X &amp; Y coordinates of the starting point of the curve (light green center). It has the percent value of zero.</li>
+							<li><strong class="scxy">csxo, csyo</strong>: The X &amp; Y offset of the control point for the curve start (dark green center). This value is added to the starting X &amp; Y values. The offset was used to make the points easier to understand and/or read.</li>
+							<li><strong class="ecxy">cexo, ceyo</strong>: The X &amp; Y offset of the control point for the curve end (dark red center). This value is added to the end X &amp; Y values.</li>
+							<li><strong class="exy">ex, ey</strong>: The X &amp; Y coordinates of the end point of the curve (light red center). It has a value of 100%.</li>
+					</li>
+					<li>If the grip jumps around a bit too much, try reducing the tolerance and/or range settings.</li>
+				</ul>
+
+			</p>
+		</div>
+
+	</div>
+
+</div> <!-- end content -->
+
+<div class="push"></div>
+
+</div> <!-- end wrapper -->
+
+<footer>
+	<p class="footer">
+		<a href="index.html">Home</a> |
+		<a href="builder.html">Builder</a> |
+		<a href="https://github.com/Mottie/Pathslider/downloads">Download</a> |
+		<a href="https://github.com/Mottie/Pathslider/wiki">Documentation</a> |
+		<a href="https://github.com/Mottie/Pathslider/">Fork on Github</a> |
+		<a href="https://github.com/Mottie/Pathslider/issues">Report an Issue</a>
+		<br>
+		<span class="blog">jQuery Pathslider by <a href="http://wowmotty.blogspot.com/">Mottie</a></span>
+	</p>
+</footer>
+
+</body></html>

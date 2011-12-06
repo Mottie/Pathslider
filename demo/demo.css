@@ -1,0 +1,218 @@
+﻿html,body { margin: 0; height: 100%; }
+
+body { background: #ddd; color: #333; }
+a:link { color: #cab; text-decoration: none; }
+a:hover { color: #fff; }
+a:visited, a:active { color: #cab; }
+
+h1.hide { display: none; }
+.oldie h1.hide { display: block; margin: 50px; color: #000; }
+h1.hide, .oldie .builder .wrapper, .oldie .builder .footer { display: none; }
+
+header, .header {
+	min-height: 100px;
+	background: #789;
+	background: -moz-radial-gradient(center top, ellipse farthest-corner, #789, #677 40%);
+	background: -webkit-radial-gradient(center top, ellipse farthest-corner, #789, #677 40%);
+	background: -o-radial-gradient(center top, ellipse farthest-corner, #789, #677 40%);
+	background: -ms-radial-gradient(center top, ellipse farthest-corner, #789, #677 40%);
+	box-shadow: inset 0 0 10px #567;
+}
+
+h1 {
+	color: #ddd;
+	margin: 0;
+	text-align: center;
+	font-size: 3.5em;
+	font-family: 'Paytone One', sans-serif;
+	text-shadow: #555 1px 1px, #555 2px 2px;
+}
+
+header a, .header a {
+	position: absolute;
+	top: 25px;
+	width: 50px;
+	height: 50px;
+	display: block;
+	text-indent: -999em;
+}
+header a.current, .header a.current {
+	-webkit-box-shadow: inset 0 0 20px #59b;
+	-moz-box-shadow: inset 0 0 20px #59b;
+	box-shadow: inset 0 0 20px #59b;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+a.home {
+	left: 20px;
+	background: url(../demo/pathslider.png) center center no-repeat;
+}
+a.builder {
+	left: 75px;
+	background: url(../demo/pathbuilder.png) center center no-repeat;
+}
+
+.wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -100px; /* the bottom margin is the negative value of the footer's height */
+}
+
+.content {
+	width: 50%;
+	margin: 10px auto;
+}
+
+.builder .content {
+	width: 80%;
+
+}
+
+#slider {
+	margin: 0 auto;
+	background: #eee;
+	width: 300px;
+	height: 300px;
+}
+
+.builder canvas.pathslider-canvas {
+	border: #555 1px solid;
+}
+
+/* index.html */
+.demo {
+	color: #777;
+	margin: 0;
+	padding: 20px;
+	font-size: 2.5em;
+	font-family: 'Paytone One', sans-serif;
+	white-space: nowrap;
+	text-align: center;
+	text-shadow: #555 1px 1px, #555 2px 2px;
+	clear: both;
+}
+
+.demo .slider {
+	margin: 0 auto;
+}
+
+/* builder.html */
+#tabs, footer, div.footer {
+	background: #677;
+	margin-top: 10px;
+	min-width: 565px; /*** make this dynamic in the next version ***/
+}
+
+#tabs .tab {
+	color: #eee;
+}
+
+p {
+	line-height: 2em;
+}
+
+blockquote {
+	margin: 5px 40px;
+}
+
+h4, .message {
+	margin: 5px;
+}
+
+h4, strong {
+	color: #fff;
+}
+
+.events {
+	margin-bottom: 10px;
+}
+
+img#save {
+	border: #ff0 1px solid;
+	width: 15px;
+	height: 15px;
+}
+
+.moving {
+	cursor: move;
+}
+
+.corner {
+	background: url(data:image/gif;base64,R0lGODlhCgAKAJEAAOvr64CAgP///wAAACH5BAEAAAIALAAAAAAKAAoAAAIWlG+BK8CqWJsHioicTrfjuQHWaIRgAQA7) no-repeat;
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	cursor: nw-resize;
+}
+
+.events {
+	width: 30%;
+	float: right;
+	position: relative;
+}
+
+textarea.code {
+	background: #ddd;
+	font-family: 'courier';
+	width: 100%;
+}
+
+/* builder inputs */
+.points { width: 20em; }
+.position, .angle, .tolerance.text, .range.text, .thickness.text, .grid.text { width: 35px; }
+.gripColor, .curveColor { width: 100px; }
+.bkgd { width: 90%; }
+
+/* readme colors */
+.sxy { color: hsl(120,80%,50%); }
+.scxy { color: hsl(120,60%,40%); }
+.ecxy { color: hsl(0,40%,60%); }
+.exy { color: hsl(0,55%,60%); }
+
+footer, div.footer, .push {
+	height: 100px;
+	font-size: 20px;
+	text-align: center;
+	clear: both;
+	padding: 10px 0 30px 0;
+}
+
+footer, div.footer {
+	background: #789;
+	background: -moz-radial-gradient(center bottom, ellipse farthest-corner, #789, #677 40%);
+	background: -webkit-radial-gradient(center bottom, ellipse farthest-corner, #789, #677 40%);
+	background: -o-radial-gradient(center bottom, ellipse farthest-corner, #789, #677 40%);
+	background: -ms-radial-gradient(center bottom, ellipse farthest-corner, #789, #677 40%);
+	box-shadow: inset 0 0 10px #567;
+}
+
+.blog {
+	font-size: 0.8em;
+	color: #ccc;
+	text-shadow: #aaa inset 0px 3px 3px;
+}
+
+#tooltip {
+	max-width: 400px;
+	font-size: 1.1em;
+	color: #222;
+	background: #ddd;
+	border: 1px solid #aaa;
+	padding: 10px;
+	display: none;
+	opacity: 0.95;
+	filter: alpha(opacity=95);
+	text-align: left;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+#tooltip .close {
+ display: none;
+}

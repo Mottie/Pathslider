@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 9]> <html class="oldie"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>jQuery Pathslider</title>
+
+<!-- demo -->
+<link href="http://fonts.googleapis.com/css?family=Paytone+One" rel="stylesheet">
+<link href="demo/demo.css" rel="stylesheet">
+
+<!-- jQuery (required) -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+
+<!--Pathslider files (required) -->
+<link href="css/pathslider.css" rel="stylesheet">
+<script src="js/jquery.pathslider.js"></script>
+
+<style>
+	#basic {
+		width: 275px;
+		height: 62px;
+		background: url(demo/arch.png) 8px 6px no-repeat;
+	}
+	#p_curve {
+		width: 113px;
+		height: 165px;
+	}
+	#s_curve {
+		width: 266px;
+		height: 266px;
+	}
+	.oldie #p_curve {
+		background: url(demo/p.gif) 5px 5px no-repeat;
+	}
+	.oldie #s_curve {
+		background: url(demo/s.gif) 5px 5px no-repeat;
+	}
+</style>
+<script>
+$(function(){
+
+	var oldie = $('html').hasClass('oldie');
+
+	// basic curve
+	$('#basic').pathslider({
+		// class added to the grip/handle
+		gripClass  : oldie ? 'chrome1' : '',
+		// it has a background image instead
+		useCanvas  : false,
+		// when true, the grip will rotate based on the shape of the path
+		rotateGrip : true,
+		// 0-100 percentage value
+		value      : 50,
+		// BEZIER POINTS
+		// base.points = [ sx,sy, csxo,csyo, cexo,ceyo, ex,ey ]
+		// sx,sy = start x & y
+		// csxo,csyo = control start x & y offset from start point
+		// cexo,ceyo = control end x & y offset from end point
+		// ex,ey = end x & y
+		points     : [ 8,48,50,-50,-50,-50,261,45 ],
+		// Total number of points of the curve to save; increase in increments of 100 to smooth out the
+		// grip movement, but not more than 500 (it slows everything down)
+		dataPoints : 200,
+		// distance on path from the last position to check - increase this to scroll faster
+		tolerance  : 3,
+		// distance from x or y to find matching x/y (should be about the same size as the grip
+		range      : 30
+	});
+
+	// p curve
+	$('#p_curve').pathslider({
+		gripClass  : oldie ? 'chrome1' : 'black',
+		value : 50,
+		points     : [ 38,82,200,25,-125,-300,38,157 ],
+		dataPoints : 200,
+		tolerance  : 3,
+		range      : 30
+	});
+
+	// s curve
+	$('#s_curve').pathslider({
+		gripClass  : oldie ? 'chrome1' : 'chrome2',
+		curve      : { color : '#777', width: 12 },
+		value : 50,
+		points     : [ 8,258,250,0,-250,0,258,8 ],
+		dataPoints : 200,
+		tolerance  : 3,
+		range      : 30
+	});
+
+});
+</script>
+
+</head><body>
+
+<div class="wrapper">
+
+<div class="header">
+	<h1>jQuery Pathslider</h1>
+	<a class="home current" title="Home" href="index.html">Home</a>
+	<a class="builder" title="Builder" href="builder.html">Builder</a>
+</div>
+
+<div class="content">
+
+	<div class="demo">
+		<div class="title">Basic Curve</div>
+		<div id="basic" class="slider"></div>
+	</div>
+
+	<div class="demo">
+		<div class="title">"P" Curve</div>
+		<div id="p_curve" class="slider"></div>
+	</div>
+
+	<div class="demo">
+		<div class="title">"S" Curve</div>
+		<div id="s_curve" class="slider"></div>
+	</div>
+
+</div> <!-- end content -->
+
+<div class="push"></div>
+
+</div> <!-- end wrapper -->
+
+<div class="footer">
+	<p>
+		<a href="index.html">Home</a> |
+		<a href="builder.html">Builder</a> |
+		<a href="https://github.com/Mottie/Pathslider/downloads">Download</a> |
+		<a href="https://github.com/Mottie/Pathslider/wiki">Documentation</a> |
+		<a href="https://github.com/Mottie/Pathslider/">Fork on Github</a> |
+		<a href="https://github.com/Mottie/Pathslider/issues">Report an Issue</a>
+		<br>
+		<span class="blog">jQuery Pathslider by <a href="http://wowmotty.blogspot.com/">Mottie</a></span>
+	</p>
+</div>
+
+</body></html>
