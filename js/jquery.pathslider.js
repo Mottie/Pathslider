@@ -116,7 +116,7 @@ $.pathslider = function(el, options){
 
 		base.makeArray();
 		// save the position in the array of the starting value (roughly)
-		t = $.inArray(base.percent, base.arrayP);
+		var t = $.inArray(base.percent, base.arrayP);
 		base.position = (t === -1) ? Math.round(base.percent/100 * base.dataPoints) : t;
 
 		base.setSlider(base.percent, null, true);
