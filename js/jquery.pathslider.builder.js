@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery Pathslider Builder v0.9alpha
+ * jQuery Pathslider Builder v0.9.1 alpha
  *
  * By Rob Garrison (aka Mottie & Fudgey)
  * Licensed under the MIT License
@@ -48,14 +48,14 @@ return this.each(function(){
 		.appendTo(base.$el)
 		.mousedown(function(e) {
 			$(document)
-			.unbind('mousemove.pathbuilder')
-			.bind('mousemove.pathbuilder', function(e) {
+			.unbind('mousemove.pathbuilder touchmove.pathbuilder')
+			.bind((base.hasTouch ? 'touchmove' : 'mousemove') + '.pathbuilder', function(e) {
 				var ww = $(window).width(),
 					wh = $(window).height(),
 					l = base.$canvas.offset().left,
 					t = base.$canvas.offset().top,
-					w = e.pageX - l,
-					h = e.pageY - t;
+					w = (e.originalEvent.touches ? e.originalEvent.touches[0].pageX : e.pageX) - l,
+					h = (e.originalEvent.touches ? e.originalEvent.touches[0].pageY : e.pageY) - t;
 				w = (w < 100) ? 100 : w > ww-l ? ww-l : w;
 				h = (h < 100) ? 100 : h > wh-t ? wh-t : h; // min w & h
 				base.$canvas.attr({ width : w, height: h });
@@ -63,8 +63,8 @@ return this.each(function(){
 				base.sliderDim = [ base.$el.position().left, base.$el.position().top, w, h ];
 				base.drawControls();
 			})
-			.bind('mouseup.pathbuilder', function(){
-				$(document).unbind('mousemove.pathbuilder');
+			.bind((base.hasTouch ? 'touchend' : 'mouseup') + '.pathbuilder', function(){
+				$(document).unbind('mousemove.pathbuilder touchmove.pathbuilder');
 			});
 		});
 
@@ -86,10 +86,10 @@ return this.each(function(){
 		base.setSlider(base.percent, null, true);
 		if (o.edit) {
 			base.$canvas
-				.unbind('mousedown.pathbuilder mousemove.pathbuilder mouseup.pathbuilder mouseleave.pathbuilder')
-				.bind('mousedown.pathbuilder', function(e){ base.dragStart(e); })
-				.bind('mousemove.pathbuilder', function(e){ base.dragging(e); })
-				.bind('mouseup.pathbuilder mouseleave.pathbuilder', function(e){ base.dragEnd(e); });
+				.unbind('mousedown mousemove mouseup mouseleave touchstart touchmove touchend touchcancel'.split(' ').join('.pathbuilder ') + '.pathbuilder')
+				.bind((base.hasTouch ? 'touchstart' : 'mousedown') + '.pathbuilder', function(e){ base.dragStart(e); })
+				.bind((base.hasTouch ? 'touchmove' : 'mousemove') + '.pathbuilder', function(e){ base.dragging(e); })
+				.bind((base.hasTouch ? 'touchend.pathbuilder touchcancel' : 'mouseup.pathbuilder mouseleave') + '.pathbuilder', function(e){ base.dragEnd(e); });
 		}
 		if (!internal) {
 			base.$el.trigger('update.pathslider', [base]);
@@ -181,8 +181,8 @@ return this.each(function(){
 			l = base.controls.length,
 			i, j = 0, r, dx, dy;
 		for (i=0; i < l; i++) {
-			dx = base.controls[i++] - e.x;
-			dy = base.controls[i] - e.y;
+			dx = base.controls[i++] - e[0];
+			dy = base.controls[i] - e[1];
 			r = o.style[base.controlNames[j]].radius + o.grid/2;
 			if ((dx * dx) + (dy * dy) < r * r) {
 				base.drag = i-1;
@@ -201,8 +201,8 @@ return this.each(function(){
 				e = base.mousePos(event),
 				c = base.controls,
 				l = c.length,
-				x = e.x - base.dPoint.x,
-				y = e.y - base.dPoint.y;
+				x = e[0] - base.dPoint[0],
+				y = e[1] - base.dPoint[1];
 			// Move whole thing
 			if (event.shiftKey) {
 			if (x > o.grid || y > o.grid) { base.dPoint = e; }
@@ -214,8 +214,8 @@ return this.each(function(){
 				base.dPoint = e;
 			} else {
 				// only move the one point
-				c[base.drag] = (o.snap) ? Math.round((base.dPoint.x + x)/g)*g : base.dPoint.x + x;
-				c[base.drag+1] = (o.snap) ? Math.round((base.dPoint.y + y)/g)*g : base.dPoint.y + y;
+				c[base.drag] = (o.snap) ? Math.round((base.dPoint[0] + x)/g)*g : base.dPoint[0] + x;
+				c[base.drag+1] = (o.snap) ? Math.round((base.dPoint[1] + y)/g)*g : base.dPoint[1] + y;
 			}
 			base.drawControls();
 			base.$el.trigger('update.pathslider', [base]);

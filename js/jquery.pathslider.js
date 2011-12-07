@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery Pathslider v0.9 alpha
+ * jQuery Pathslider v0.9.1 alpha
  *
  * By Rob Garrison (aka Mottie & Fudgey)
  * Licensed under the MIT License
@@ -27,6 +27,7 @@ $.pathslider = function(el, options){
 		// Is there a canvas?
 		t = document.createElement('canvas');
 		base.hasCanvas = !!(t.getContext && t.getContext('2d'));
+		base.hasTouch = document.hasOwnProperty("ontouchend");
 
 		// add grip
 		base.$grip = $('<div></div>').appendTo(base.$el);
@@ -51,7 +52,7 @@ $.pathslider = function(el, options){
 		});
 
 		$(document)
-			.bind('mouseup.pathslider mouseleave.pathslider', function(e){
+			.bind( base.hasTouch ? 'touchend.pathslider touchcancel.pathslider' : 'mouseup.pathslider mouseleave.pathslider', function(e){
 				if (base.sliding) { // && ($(e.target).closest('.pathslider').length || e.type === 'mouseleave')) {
 					base.$el.trigger('stop.pathslider', [base]);
 					if (base.lastPercent !== base.percent) {
@@ -62,7 +63,7 @@ $.pathslider = function(el, options){
 				base.$grip.removeClass('sliding');
 				base.sliding = false;
 			})
-			.bind('mousemove.pathslider', function(e){
+			.bind( (base.hasTouch ? 'touchmove' : 'mousemove') + '.pathslider', function(e){
 				if (base.sliding) {
 					base.setSlider( base.findPos(e), null, true );
 				}
@@ -79,7 +80,7 @@ $.pathslider = function(el, options){
 			});
 
 		base.$grip
-			.bind('mousedown.pathslider', function(e){
+			.bind( (base.hasTouch ? 'touchstart' : 'mousedown') + '.pathslider', function(e){
 				base.sliding = true;
 				$(this).addClass('sliding');
 				base.$el.trigger('start.pathslider', [base]);
@@ -151,8 +152,8 @@ $.pathslider = function(el, options){
 			css.top = p[1] - base.gripCenter[1];
 			base.$grip
 				.attr({
-					'data-degrees'  : base.angle,
-					'data-position' : percent
+					'data-angle'   : base.angle,
+					'data-percent' : percent
 				})
 				.css(css);
 			// find closest percent in the array - this relies on there being a factor
@@ -166,11 +167,11 @@ $.pathslider = function(el, options){
 	};
 
 	// relative mouse position
-	base.mousePos = function(event) {
-		return {
-			x: event.pageX - base.sliderDim[0],
-			y: event.pageY - base.sliderDim[1]
-		};
+	base.mousePos = function(e) {
+		return [
+			(e.originalEvent.touches ? e.originalEvent.touches[0].pageX : e.pageX) - base.sliderDim[0],
+			(e.originalEvent.touches ? e.originalEvent.touches[0].pageY : e.pageY) - base.sliderDim[1]
+		];
 	};
 
 	// find percentage given the x,y coordinates
@@ -183,21 +184,20 @@ $.pathslider = function(el, options){
 		// check x & y cross ref based on nearby positions (+/- tolerance)
 		t = parseInt(o.tolerance + 1, 10) || 2, // tolerance of 1 is too small
 		r = parseInt(o.range, 10) || base.gripCenter[0], // set to 1/2 width of grip
-		x = event.pageX - base.sliderDim[0],
-		y = event.pageY - base.sliderDim[1];
+		pos = base.mousePos(event);
 		// save percent
 		for ( i=0; i < r; i++ ){
 			px = []; py = [];
 			for ( j=0; j < t + 1; j++ ){
 				// check positive direction
-				dx = Math.abs(base.arrayX[last+j] - x) <= i;
-				dy = Math.abs(base.arrayY[last+j] - y) <= i;
+				dx = Math.abs(base.arrayX[last+j] - pos[0]) <= i;
+				dy = Math.abs(base.arrayY[last+j] - pos[1]) <= i;
 				if (dx && dy) { return base.returnPos(last+j); }
 				if (dx) { px.push(last+j); }
 				if (dy) { py.push(last+j); }
 				// check in negative direction
-				dx = Math.abs(base.arrayX[last-j] - x) <= i;
-				dy = Math.abs(base.arrayY[last-j] - y) <= i;
+				dx = Math.abs(base.arrayX[last-j] - pos[0]) <= i;
+				dy = Math.abs(base.arrayY[last-j] - pos[1]) <= i;
 				if (dx && dy) { return base.returnPos(last-j); }
 				if (dx) { px.push(last-j); }
 				if (dy) { py.push(last-j); }

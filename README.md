@@ -43,6 +43,13 @@
 
 ### Changelog
 
+#### Version 0.9.1 alpha (12/7/2011)
+
+* Added touch device compatibility.
+* Changed the grip "data-degree" attribute to "data-angle". This attribute contains the angle of transformation to rotate the grip.
+* Changed the grip "data-position" attribute to "data-percent". This attribute contains the current percentage distance along the curve of the grip.
+* Added some images for the wiki documentation.
+
 #### Version 0.9 alpha (12/5/2011)
 
 * Initial commit
