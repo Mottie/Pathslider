@@ -73,7 +73,7 @@ $.pathslider = function(el, options){
 			.bind('resize.pathslider', function(){
 				base.update();
 			})
-			.load(function(){
+			.bind('load', function(){
 				// needed because loading images/fonts will shift the page
 				base.sliderDim[0] = base.$el.offset().left;
 				base.sliderDim[1] = base.$el.offset().top;
