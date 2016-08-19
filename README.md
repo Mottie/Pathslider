@@ -39,6 +39,7 @@ Wiki:
   * I don't plan on making it go continuously around in a circle. It will have a starting and stopping point.
   * If you need a continuous circle slider, check out [this one](http://www.eleqtriq.com/2009/12/javascriptdialcontrol/), and [this one](http://www.baijs.nl/tinycircleslider/).
 * Combine multiple beziers to make extended shapes - my math skills are a bit lacking so this may take a while, unless someone out there is willing to help ;)
+* Consider switching from using canvas to svg.
 
 ## Dependencies
 
@@ -59,7 +60,7 @@ Wiki:
 
 ## Change Log
 
-### Version 1.0.0-alpha (8/19/2016)
+### Version 1.0.0-alpha (8/19/2016) (mis-released as beta)
 
 * Core:
   * Use window load event for jQuery v3.0+ compatibility.
