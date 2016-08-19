@@ -161,6 +161,20 @@ $(function(){
 		this.select();
 	});
 
+	// shift points
+	$('.shift').click(function(){
+		var x, y,
+			$el = $(this),
+			isX = $el.filter('.x').length,
+			dir = $el.filter('.left, .up').length ? -1 : 1;
+			amount = parseInt($(isX ? '.movex' : '.movey').val(), 10) || 10;
+
+		x = isX ? dir * amount : 0;
+		y = isX ? 0 : dir * amount;
+		s.points = s.options.points = s.shift(x, y);
+		s.updateBuilder();
+	});
+
 	// "Set" points
 	$('.setpoints').click(function(){
 		var p, pts = points.val().split(',');

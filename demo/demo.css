@@ -126,8 +126,8 @@ h4, strong {
 	color: #fff;
 }
 
-.events {
-	margin-bottom: 10px;
+.message {
+	min-height: 50px;
 }
 
 img#save {
@@ -152,8 +152,17 @@ img#save {
 
 .events {
 	width: 30%;
-	float: right;
 	position: relative;
+	margin-bottom: 10px;
+	float: right;
+}
+.move-controls {
+	display: inline-block;
+	height: 70px;
+	margin-left: 40px;
+}
+.move-controls input {
+	width: 40px;
 }
 
 textarea.code {
