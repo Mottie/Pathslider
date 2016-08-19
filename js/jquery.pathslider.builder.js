@@ -110,6 +110,7 @@ return this.each(function(){
 
 		// finish drawing curve - don't let drawCanvas do this because
 		// we're changing the colors for the control handles
+		base.finishCurve(c, b);
 		c.beginPath();
 		c.moveTo(b[0], b[1]);
 		c.bezierCurveTo(b[2], b[3], b[4], b[5], b[6], b[7]);

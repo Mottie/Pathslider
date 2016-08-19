@@ -92,6 +92,7 @@ $.pathslider = function(el, options){
 
 	};
 
+	// update dimensions & grip position
 	base.update = function(){
 
 		// using attr to remove other css grip classes when updating
@@ -139,18 +140,19 @@ $.pathslider = function(el, options){
 			// set position of slider without using the array (more precision)
 			percent = parseFloat(percent, 10);
 			percent = (percent > 100) ? 100 : percent < 0 ? 0 : percent;
-			var css, pos = $.inArray(percent, base.arrayP),
-			p = base.calcBezier(percent/100, base.pointsxy),
-			pm1 = (percent - 2 > 0) ? base.calcBezier( (percent-2)/100, base.pointsxy ) : p,
-			pp1 = (percent + 2 < 100) ? base.calcBezier( (percent+2)/100, base.pointsxy ) : p,
-			// m = slope of tangent - used to change rotation angle of the grip
-			// yes, I could have used the cubic derivative, but this is less math
-			m = (pp1[0] - pm1[0] === 0) ? 90 : (pp1[1] - pm1[1])/(pp1[0] - pm1[0]);
+			var css, angle,
+				// pos = $.inArray(percent, base.arrayP),
+				p = base.calcBezier(percent/100, base.pointsxy),
+				pm1 = (percent - 2 > 0) ? base.calcBezier( (percent-2)/100, base.pointsxy ) : p,
+				pp1 = (percent + 2 < 100) ? base.calcBezier( (percent+2)/100, base.pointsxy ) : p,
+				// m = slope of tangent - used to change rotation angle of the grip
+				// yes, I could have used the cubic derivative, but this is less math
+				m = (pp1[0] - pm1[0] === 0) ? 90 : (pp1[1] - pm1[1])/(pp1[0] - pm1[0]);
 			base.angle = parseInt(Math.atan(m) * base.rad2deg, 10);
-			m = 'rotate(' + base.angle + 'deg)';
+			angle = 'rotate(' + base.angle + 'deg)';
 			css = (o.rotateGrip) ? {
-				'-webkit-transform' : m,
-				'transform'         : m
+				'-webkit-transform' : angle,
+				'transform'         : angle
 			} : {};
 			css.left = p[0] - base.gripCenter[0];
 			css.top = p[1] - base.gripCenter[1];
@@ -275,7 +277,7 @@ $.pathslider = function(el, options){
 
 	// Make purdy curve
 	base.drawCurve = function() {
-		var c, grad, tmp,
+		var ctx, grad, tmp,
 			points = base.pointsxy;
 		if (!base.$el.find('canvas').length) {
 			$('<canvas class="pathslider-canvas"></canvas>').appendTo(base.$el);
@@ -284,38 +286,44 @@ $.pathslider = function(el, options){
 			base.canvas = base.$canvas[0];
 			base.ctx = base.canvas.getContext("2d");
 		}
-		c = base.ctx;
-		c.clearRect(0, 0, base.sliderDim[2], base.sliderDim[3]);
-		c.lineCap = o.curve.cap;
-		c.lineJoin = o.curve.cap;
-		c.lineWidth = o.curve.width;
+		ctx = base.ctx;
+		ctx.clearRect(0, 0, base.sliderDim[2], base.sliderDim[3]);
+		ctx.lineCap = o.curve.cap;
+		ctx.lineJoin = o.curve.cap;
+		ctx.lineWidth = o.curve.width;
 		// this can be a gradient or image as well. See
 		// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
 		if ($.isArray(o.curve.color)) {
-			grad = c.createLinearGradient(points[0], points[1], points[6], points[7]);
+			grad = ctx.createLinearGradient(points[0], points[1], points[6], points[7]);
 			tmp = base.percent/100;
 			grad.addColorStop(0, o.curve.color[0]);
 			grad.addColorStop(tmp, o.curve.color[0]);
 			if (tmp + 0.01 <= 1) { tmp += 0.01; }
 			grad.addColorStop(tmp, o.curve.color[1]);
 			grad.addColorStop(1, o.curve.color[1]);
-			c.strokeStyle = grad;
+			ctx.strokeStyle = grad;
 		} else {
-			c.strokeStyle = o.curve.color;
+			ctx.strokeStyle = o.curve.color;
 		}
 		tmp = true;
 		if (typeof o.drawCanvas === 'function') {
 			// return anything except false to continue drawing the curve
-			tmp = o.drawCanvas(base, c, points) !== false;
-			c = base.ctx;
+			tmp = o.drawCanvas(base, ctx, points) !== false;
+			ctx = base.ctx;
 		}
 		// tmp returned from drawCanvas; if
 		if (tmp === true) {
-			c.beginPath();
-			c.moveTo(points[0], points[1]);
-			c.bezierCurveTo(points[2], points[3], points[4], points[5], points[6], points[7]);
-			c.stroke();
+			base.finishCurve(ctx, points);
 		}
+	};
+
+	base.finishCurve = function(ctx, points) {
+		ctx = ctx || base.ctx;
+		points = points || base.pointsxy;
+		ctx.beginPath();
+		ctx.moveTo(points[0], points[1]);
+		ctx.bezierCurveTo(points[2], points[3], points[4], points[5], points[6], points[7]);
+		ctx.stroke();
 	};
 
 	// Run initializer
