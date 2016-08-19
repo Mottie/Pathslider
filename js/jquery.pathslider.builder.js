@@ -42,7 +42,7 @@ return this.each(function(){
 			base.drawControls(ctx, points);
 			// prevent redrawing the curve
 			return false;
-		}
+		};
 
 		if (!base.hasCanvas) { return; } // too bad IE!
 
@@ -321,6 +321,7 @@ return this.each(function(){
 
 })(jQuery);
 
+/* jshint ignore:start */
 /**
  * Chainvas: Make APIs chainable
  * @author Lea Verou
@@ -334,3 +335,4 @@ e.extend(c,b);return this},extend:function(a,b){return Chainvas.methods.prop.cal
  * Chainvas module: Canvas
  */
 Chainvas.global("CanvasRenderingContext2D",{circle:function(a,b,d){return this.beginPath().arc(a,b,d,0,2*Math.PI,!1).closePath()},roundRect:function(a,b,d,e,c){return this.beginPath().moveTo(a+c,b).lineTo(a+d-c,b).quadraticCurveTo(a+d,b,a+d,b+c).lineTo(a+d,b+e-c).quadraticCurveTo(a+d,b+e,a+d-c,b+e).lineTo(a+c,b+e).quadraticCurveTo(a,b+e,a,b+e-c).lineTo(a,b+c).quadraticCurveTo(a,b,a+c,b).closePath()}});
+/* jshint ignore:end */

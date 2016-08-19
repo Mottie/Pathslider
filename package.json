@@ -1,0 +1,43 @@
+{
+  "name": "pathslider",
+  "title": "Pathslider",
+  "description": "A jQuery numerical slider that follows a bezier path",
+  "version": "1.0.0-beta",
+  "author": {
+    "name": "Rob Garrison",
+    "url": "https://github.com/Mottie",
+    "email": "wowmotty@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">=1.4.4"
+  },
+  "keywords": [
+    "slider",
+    "number",
+    "bezier",
+    "path",
+    "jquery-plugin"
+  ],
+  "homepage": "https://github.com/Mottie/Pathslider",
+  "demo": "http://mottie.github.io/Pathslider/",
+  "docs": "https://github.com/Mottie/Pathslider/wiki",
+  "bugs": "https://github.com/Mottie/Pathslider/issues",
+  "main": "dist/jquery.pathslider.js",
+  "files": [
+    "dist/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Mottie/pathslider.git"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.1.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^1.0.1",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-uglify": "^2.0.0"
+  }
+}
