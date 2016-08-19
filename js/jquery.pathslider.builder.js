@@ -1,13 +1,10 @@
-﻿/*
- * jQuery Pathslider Builder v0.9.1 alpha
- *
- * By Rob Garrison (aka Mottie & Fudgey)
- * Licensed under the MIT License
+/* jQuery Pathslider Builder v0.9.1 alpha
+ * By Rob Garrison (Mottie)
+ * MIT License
  *
  * Code based on the bezier curve demo by Craig Buckler (http://twitter.com/craigbuckler)
  * http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
  */
-
 (function($){
 
 $.pathbuilderdefaults = {
@@ -41,6 +38,12 @@ return this.each(function(){
 		base.options = o = $.extend(true, base.options, $.pathbuilderdefaults, options);
 		base.drag = null;
 
+		base.options.drawCanvas = function(b, ctx, points) {
+			base.drawControls(ctx, points);
+			// prevent redrawing the curve
+			return false;
+		}
+
 		if (!base.hasCanvas) { return; } // too bad IE!
 
 		// Add resizable corner to allow resizing of the canvas
@@ -61,7 +64,8 @@ return this.each(function(){
 				base.$canvas.attr({ width : w, height: h });
 				base.$el.css({ width : w, height: h });
 				base.sliderDim = [ base.$el.position().left, base.$el.position().top, w, h ];
-				base.drawControls();
+				// Add bezier curve & controls
+				base.drawCurve();
 			})
 			.bind((base.hasTouch ? 'touchend' : 'mouseup') + '.pathbuilder', function(){
 				$(document).unbind('mousemove.pathbuilder touchmove.pathbuilder');
@@ -82,11 +86,10 @@ return this.each(function(){
 		// convert control point offsets to x/y positions
 		base.pointsxy = base.convert2xy( (base.builderInitialized) ? base.points : base.shift(25,100) );
 		base.update();
-		base.drawControls();
 		base.setSlider(base.percent, null, true);
 		if (o.edit) {
 			base.$canvas
-				.unbind('mousedown mousemove mouseup mouseleave touchstart touchmove touchend touchcancel'.split(' ').join('.pathbuilder ') + '.pathbuilder')
+				.unbind('.pathbuilder')
 				.bind((base.hasTouch ? 'touchstart' : 'mousedown') + '.pathbuilder', function(e){ base.dragStart(e); })
 				.bind((base.hasTouch ? 'touchmove' : 'mousemove') + '.pathbuilder', function(e){ base.dragging(e); })
 				.bind((base.hasTouch ? 'touchend.pathbuilder touchcancel' : 'mouseup.pathbuilder mouseleave') + '.pathbuilder', function(e){ base.dragEnd(e); });
@@ -97,13 +100,20 @@ return this.each(function(){
 	};
 
 	// Make purdy stuff
-	base.drawControls = function() {
+	base.drawControls = function(c, b) {
 		var i, j, x, y, t, p, s = o.style,
-		c = base.ctx, b = base.pointsxy,
+		// c = base.ctx, b = base.pointsxy,
 		w = base.sliderDim[2], h = base.sliderDim[3];
 		base.points = base.convert();
 		clearTimeout(base.timer);
 		c.clearRect(0, 0, w, h);
+
+		// finish drawing curve - don't let drawCanvas do this because
+		// we're changing the colors for the control handles
+		c.beginPath();
+		c.moveTo(b[0], b[1]);
+		c.bezierCurveTo(b[2], b[3], b[4], b[5], b[6], b[7]);
+		c.stroke();
 
 		// Edit mode = add grid, control points/lines
 		if (o.edit) {
@@ -146,15 +156,19 @@ return this.each(function(){
 					fillStyle   : s[base.controlNames[j]].fill
 				})
 				.beginPath()
-				.arc(b[i++], b[i], s[base.controlNames[j]].radius, s[base.controlNames[j]].arc1, s[base.controlNames[j]].arc2, true)
+				.arc(
+					b[i++],
+					b[i],
+					s[base.controlNames[j]].radius,
+					s[base.controlNames[j]].arc1,
+					s[base.controlNames[j]].arc2,
+					true
+				)
 				.fill()
 				.stroke();
 				j += i%2;
 			}
 		}
-
-		// Add bezier curve
-		base.drawCurve();
 
 		// thottle resizing window
 		base.timer = setTimeout(function(){
@@ -217,7 +231,9 @@ return this.each(function(){
 				c[base.drag] = (o.snap) ? Math.round((base.dPoint[0] + x)/g)*g : base.dPoint[0] + x;
 				c[base.drag+1] = (o.snap) ? Math.round((base.dPoint[1] + y)/g)*g : base.dPoint[1] + y;
 			}
-			base.drawControls();
+			// Add bezier curve & controls
+			base.drawCurve();
+
 			base.$el.trigger('update.pathslider', [base]);
 		}
 	};
@@ -237,7 +253,7 @@ return this.each(function(){
 		base.updateBuilder(true);
 		// include curve width when cropping
 		var w = o.curve.width * 2;
-		return [ 
+		return [
 			Math.min.apply(this,base.arrayX) - w, // min X
 			Math.min.apply(this,base.arrayY) - w, // min Y
 			Math.max.apply(this,base.arrayX) + w, // max X
@@ -289,7 +305,9 @@ return this.each(function(){
 			'    rotateGrip : ' + o.rotateGrip + ',\n' +
 			'    tolerance  : ' + o.tolerance + ',\n' +
 			'    range      : ' + o.range + ',\n' +
-			'    curve      : { width:' + o.curve.width + ', color:"' + o.curve.color + '", cap:"' + o.curve.cap + '" }\n' +
+			'    curve      : { width:' + o.curve.width + ', color:' +
+				($.isArray(o.curve.color) ? '["' + o.curve.color.join('","') + '"]' : '"' + o.curve.color + '"') +
+				', cap:"' + o.curve.cap + '" }\n' +
 			'  });\n' +
 			'});\n' +
 			'</script>';

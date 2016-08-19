@@ -1,11 +1,7 @@
-﻿/*
- * jQuery Pathslider v0.9.1 alpha
- *
- * By Rob Garrison (aka Mottie & Fudgey)
- * Licensed under the MIT License
- *
+/* jQuery Pathslider v0.9.1 alpha
+ * By Rob Garrison (Mottie)
+ * MIT License
  */
-
 (function($){
 $.pathslider = function(el, options){
 
@@ -91,6 +87,7 @@ $.pathslider = function(el, options){
 			});
 
 		base.update();
+
 		base.$el.trigger('create.pathslider', [base]);
 
 	};
@@ -100,6 +97,12 @@ $.pathslider = function(el, options){
 		// using attr to remove other css grip classes when updating
 		base.$grip.attr('class', 'pathslider-grip ' + o.gripClass);
 
+		if (base.ctx) {
+			// clear canvas *before* setting new dimensions
+			// just in case the new size is smaller than the previous
+			base.ctx.clearRect(0, 0, base.sliderDim[2], base.sliderDim[3]);
+		}
+
 		base.sliderDim = [
 			base.$el.offset().left,
 			base.$el.offset().top,
@@ -107,7 +110,11 @@ $.pathslider = function(el, options){
 			base.$el.height()
 		];
 
-		base.gripCenter = [ base.$grip.width()/2, base.$grip.height()/2 ]; // for centering grip
+		// get grip dimensions; jQuery v3+ width() & height() return the rotated dimensions
+		// which we don't want!
+		var computedStyle = window.getComputedStyle(base.$grip[0]);
+		// for centering grip
+		base.gripCenter = [ parseInt(computedStyle.width, 10)/2, parseInt(computedStyle.height, 10)/2 ];
 
 		// number of data points to store - increase to smooth the animation (based on slider size)
 		base.dataPoints = o.dataPoints;
@@ -143,9 +150,6 @@ $.pathslider = function(el, options){
 			m = 'rotate(' + base.angle + 'deg)';
 			css = (o.rotateGrip) ? {
 				'-webkit-transform' : m,
-				'-moz-transform'    : m,
-				'-o-transform'      : m,
-				'-ms-transform'     : m,
 				'transform'         : m
 			} : {};
 			css.left = p[0] - base.gripCenter[0];
@@ -213,7 +217,12 @@ $.pathslider = function(el, options){
 		var t = base.position === p;
 		base.percent = base.arrayP[p];
 		base.position = p;
-		if (!t) { base.$el.trigger('slide.pathslider', [base] ); }
+		if (!t) {
+			if (base.hasCanvas && o.useCanvas) {
+				base.drawCurve();
+			}
+			base.$el.trigger('slide.pathslider', [base] );
+		}
 		return base.percent;
 	};
 
@@ -266,7 +275,8 @@ $.pathslider = function(el, options){
 
 	// Make purdy curve
 	base.drawCurve = function() {
-		var c, b = base.pointsxy;
+		var c, grad, tmp,
+			points = base.pointsxy;
 		if (!base.$el.find('canvas').length) {
 			$('<canvas class="pathslider-canvas"></canvas>').appendTo(base.$el);
 			// size in attribute needed to keep canvas size in proportion
@@ -275,14 +285,37 @@ $.pathslider = function(el, options){
 			base.ctx = base.canvas.getContext("2d");
 		}
 		c = base.ctx;
+		c.clearRect(0, 0, base.sliderDim[2], base.sliderDim[3]);
 		c.lineCap = o.curve.cap;
 		c.lineJoin = o.curve.cap;
 		c.lineWidth = o.curve.width;
-		c.strokeStyle = o.curve.color; // this can be a gradient or image as well... https://developer.mozilla.org/en/Canvas_tutorial/Applying_styles_and_colors
-		c.beginPath();
-		c.moveTo(b[0], b[1]);
-		c.bezierCurveTo(b[2], b[3], b[4], b[5], b[6], b[7]);
-		c.stroke();
+		// this can be a gradient or image as well. See
+		// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors
+		if ($.isArray(o.curve.color)) {
+			grad = c.createLinearGradient(points[0], points[1], points[6], points[7]);
+			tmp = base.percent/100;
+			grad.addColorStop(0, o.curve.color[0]);
+			grad.addColorStop(tmp, o.curve.color[0]);
+			if (tmp + 0.01 <= 1) { tmp += 0.01; }
+			grad.addColorStop(tmp, o.curve.color[1]);
+			grad.addColorStop(1, o.curve.color[1]);
+			c.strokeStyle = grad;
+		} else {
+			c.strokeStyle = o.curve.color;
+		}
+		tmp = true;
+		if (typeof o.drawCanvas === 'function') {
+			// return anything except false to continue drawing the curve
+			tmp = o.drawCanvas(base, c, points) !== false;
+			c = base.ctx;
+		}
+		// tmp returned from drawCanvas; if
+		if (tmp === true) {
+			c.beginPath();
+			c.moveTo(points[0], points[1]);
+			c.bezierCurveTo(points[2], points[3], points[4], points[5], points[6], points[7]);
+			c.stroke();
+		}
 	};
 
 	// Run initializer
