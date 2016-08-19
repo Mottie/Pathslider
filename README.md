@@ -1,4 +1,4 @@
-## Pathslider jQuery Plugin (alpha)
+## Pathslider jQuery Plugin (alpha) [![MIT][license-image]][license-url]
 
 * [Pathslider demo](http://mottie.github.com/Pathslider/index.html).
 * [Pathslider Builder](http://mottie.github.com/Pathslider/builder.html).
@@ -40,6 +40,9 @@
 * The grip/handle will work if the loop folds back on itself - try these points to see an example: 75,200,200,-125,-200,0,225,200
 * The S-Curve demo seems to get stuck near 100% but only in Firefox and on the demo page. It works fine when isolated. The grip isn't staying centered under the cursor like it does in Chrome.
 * Safari for Windows likes to start with the grip in the upper left corner of the slider box... most of the time when I hover over it, it jumps to where it should be... wow that is so weird. Also, the "S" curve demo doesn't want to work at all...
+
+[license-url]: https://github.com/Mottie/Pathslider/blob/master/LICENSE
+[license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 
 ### Changelog
 
