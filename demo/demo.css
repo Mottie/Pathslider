@@ -1,9 +1,9 @@
-﻿html,body { margin: 0; height: 100%; }
+html,body { margin: 0; height: 100%; }
 
 body { background: #ddd; color: #333; }
-a:link { color: #cab; text-decoration: none; }
+a:link { color: #ddd; text-decoration: none; }
 a:hover { color: #fff; }
-a:visited, a:active { color: #cab; }
+a:visited, a:active { color: #ccc; }
 
 h1.hide { display: none; }
 .oldie h1.hide { display: block; margin: 50px; color: #000; }
@@ -169,10 +169,10 @@ textarea.code {
 .bkgd { width: 90%; }
 
 /* readme colors */
-.sxy { color: hsl(120,80%,50%); }
-.scxy { color: hsl(120,60%,40%); }
-.ecxy { color: hsl(0,40%,60%); }
-.exy { color: hsl(0,55%,60%); }
+.sxy { color: hsl(120,60%,85%); }
+.scxy { color: hsl(120,80%,75%); }
+.ecxy { color: hsl(0,40%,85%); }
+.exy { color: hsl(0,55%,75%); }
 
 footer, div.footer, .push {
 	height: 100px;
