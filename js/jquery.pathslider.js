@@ -29,8 +29,8 @@ $.pathslider = function(el, options){
 		base.$grip = $('<div></div>').appendTo(base.$el);
 
 		// store array of x & y positions for cross reference
-		base.points = o.points;
-		base.pointsxy = base.convert2xy();
+		base.points = [];
+		base.pointsxy = [];
 		base.arrayX = [];
 		base.arrayY = [];
 		base.arrayP = [];
@@ -86,7 +86,7 @@ $.pathslider = function(el, options){
 				return false;
 			});
 
-		base.update();
+		base.redraw();
 
 		base.$el.trigger('create.pathslider', [base]);
 
@@ -275,6 +275,18 @@ $.pathslider = function(el, options){
 		];
 	};
 
+	base.redraw = function(points) {
+		// update from options
+		base.points = base.options.points = points || base.options.points;
+		// store array of x & y positions for cross reference
+		base.pointsxy = base.convert2xy();
+		// update grip
+		base.update();
+		// update curve
+		base.drawCurve();
+		base.setSlider(base.percent, null, true);
+	};
+
 	// Make purdy curve
 	base.drawCurve = function() {
 		var ctx, grad, tmp,
@@ -370,7 +382,7 @@ $.fn.pathslider = function(options, callback){
 			if (!slider) {
 				(new $.pathslider(this, options));
 			} else {
-				return slider.update();
+				return slider.redraw();
 			}
 		// If options is a number, set percentage
 		} else if (/\d/.test(options) && !isNaN(options) && slider) {

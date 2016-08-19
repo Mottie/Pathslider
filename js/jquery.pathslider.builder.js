@@ -84,9 +84,7 @@ return this.each(function(){
 			return parseInt(v*100,10)/100;
 		});
 		// convert control point offsets to x/y positions
-		base.pointsxy = base.convert2xy( (base.builderInitialized) ? base.points : base.shift(25,100) );
-		base.update();
-		base.setSlider(base.percent, null, true);
+		base.redraw( (base.builderInitialized) ? base.points : base.shift(25,100) );
 		if (o.edit) {
 			base.$canvas
 				.unbind('.pathbuilder')
