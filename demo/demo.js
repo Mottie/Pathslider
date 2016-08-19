@@ -1,4 +1,4 @@
-﻿$(function(){
+$(function(){
 
 	var i, s, t, pathslider = $('#slider'),
 	points = $('.points'),
@@ -26,7 +26,10 @@
 			$('.snap')[0].checked = s.options.snap;
 			$('.thickness').val( s.options.curve.width ).filter('.isRange').next().html( s.options.curve.width + ' px' );
 			t = $('.gripColor'); t.val( checkColor(t, t.val()) );
-			t = $('.curveColor'); t.val( checkColor(t, t.val()) );
+			$('.curveColor').each(function(indx, el){
+				var $el = $(el);
+				$el.val( checkColor($el) );
+			});
 		}
 	},
 	checkColor = function(t,c){
@@ -88,9 +91,17 @@
 		s.options.snap = $('.snap')[0].checked;
 		$('.pathslider-grip').attr('style',''); // clear rotation
 		s.options.points = points.val().split(',');
-		s.options.curve.color = checkColor( $('.curveColor') );
 		s.options.curve.width = checkRange( $('.thickness'), 4);
 		s.options.curve.cap = $('.capStyle').val().toLowerCase();
+
+		t = $('.curveColor').map(function(){
+			return checkColor($(this));
+		}).get();
+		if (t[0] === t[1]) {
+			t = t[0];
+		}
+		// a color array => linear gradient in v1.0.0
+		s.options.curve.color = t;
 
 		if ($('.gripStyle')[0].selectedIndex === 0) {
 			$('.gripColor')[0].disabled = false;
